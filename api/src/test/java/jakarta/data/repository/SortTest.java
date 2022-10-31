@@ -17,17 +17,19 @@
  */
 package jakarta.data.repository;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
+
+import jakarta.data.test.util.ReplaceCamelCase;
 
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+@DisplayNameGeneration(ReplaceCamelCase.class)
 class SortTest {
-    public static final String NAME = "name";
+    static final String NAME = "name";
 
     @Test
-    @DisplayName("Should throw NullPointerException when one of the properties are null")
     void shouldReturnErrorWhenPropertyDirectionNull() {
         assertThatNullPointerException().isThrownBy(() -> Sort.of(null, null));
         assertThatNullPointerException().isThrownBy(() -> Sort.of(NAME, null));
@@ -35,8 +37,7 @@ class SortTest {
     }
 
     @Test
-    @DisplayName("Should ascending short when direction is ASC")
-    void shouldCreateAscendingSort() {
+    void shouldCreateAscendingSortWhenDirectionIs_ASC() {
         Sort order = Sort.of(NAME, Direction.ASC);
 
         assertSoftly(softly -> {
@@ -48,8 +49,7 @@ class SortTest {
     }
 
     @Test
-    @DisplayName("Should descending short when direction is DESC")
-    void shouldCreateDescendingSort() {
+    void shouldCreateDescendingSortWhenDirectionIs_DESC() {
         Sort order = Sort.of(NAME, Direction.DESC);
 
         assertSoftly(softly -> {
@@ -61,8 +61,7 @@ class SortTest {
     }
 
     @Test
-    @DisplayName("Should ascending sort when Sort.asc method is used")
-    void shouldCreateAsc() {
+    void shouldCreateAscendingSortWhenUsing_Sort$asc() {
         Sort order = Sort.asc("name");
 
         assertSoftly(softly -> {
@@ -74,8 +73,7 @@ class SortTest {
     }
 
     @Test
-    @DisplayName("Should descending sort when Sort.desc method is used")
-    void shouldCreateDesc() {
+    void shouldCreateDescendingSortWhenUsing_Sort$desc() {
         Sort order = Sort.desc(NAME);
 
         assertSoftly(softly -> {

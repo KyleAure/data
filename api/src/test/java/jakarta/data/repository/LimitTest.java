@@ -17,53 +17,49 @@
  */
 package jakarta.data.repository;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
+
+import jakarta.data.test.util.ReplaceCamelCase;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+@DisplayNameGeneration(ReplaceCamelCase.class)
 class LimitTest {
 
     @Test
-    @DisplayName(("Should return exception when limit maxResults is negative"))
-    void shouldReturnErrorWhenMaxResultsIsNegative() {
+    void shouldReturnErrorWhen_maxResults_IsNegative() {
         assertThatIllegalArgumentException().isThrownBy(() -> Limit.of(-1));
     }
 
     @Test
-    @DisplayName(("Should return exception when limit maxResults is zero"))
-    void shouldReturnErrorWhenMaxResultsIsZero() {
+    void shouldReturnErrorWhen_maxResults_IsZero() {
         assertThatIllegalArgumentException().isThrownBy(() -> Limit.of(0));
     }
 
     @Test
-    @DisplayName(("Should return an exception when startAt is greater than endAt"))
-    void shouldReturnErrorWhenStartAtIsGreaterThanEndAt() {
+    void shouldReturnErrorWhen_startAt_IsGreaterThan_endAt() {
         assertThatIllegalArgumentException().isThrownBy(() -> Limit.range(2, 1));
     }
 
     @Test
-    @DisplayName(("Should return exception when limit ends less than its start"))
-    void shouldRaiseErrorWhenEndAtIsLessThanStartAt() {
+    void shouldReturnErrorWhen_endAt_IsLessThan_startAt() {
         assertThatIllegalArgumentException().isThrownBy(() -> Limit.range(10, 1));
     }
 
     @Test
-    @DisplayName(("Should return exception when limit startAt is negative"))
-    void shouldReturnErrorWhenStartAtIsNegative() {
+    void shouldReturnErrorWhen_startAt_IsNegative() {
         assertThatIllegalArgumentException().isThrownBy(() -> Limit.range(-1, 10));
     }
 
     @Test
-    @DisplayName(("Should return exception when limit startAt is zero"))
-    void shouldReturnErrorWhenStartAtIsZero() {
+    void shouldReturnErrorWhen_startAt_IsZero() {
         assertThatIllegalArgumentException().isThrownBy(() -> Limit.range(0, 100));
     }
 
     @Test
-    @DisplayName(("Should create limit with default maxResults"))
-    void shouldCreateLimitWithDefaultMaxResults() {
+    void shouldCreateLimitWithDefault_maxResults() {
         Limit limit = Limit.of(1);
 
         assertSoftly(soft -> {
@@ -74,8 +70,7 @@ class LimitTest {
     }
 
     @Test
-    @DisplayName(("Should create limit with default startAt"))
-    void shouldCreateLimitWithDefaultStartAt() {
+    void shouldCreateLimitWithDefault_startAt() {
         Limit limit = Limit.of(10);
 
         assertSoftly(soft -> {
@@ -86,7 +81,6 @@ class LimitTest {
     }
 
     @Test
-    @DisplayName(("Should create limit with equals range"))
     void shouldCreateLimitWithEqualsRange() {
         Limit limit = Limit.range(1, 1);
 
@@ -98,7 +92,6 @@ class LimitTest {
     }
 
     @Test
-    @DisplayName(("Should create limit with a range"))
     void shouldCreateLimitWithRange() {
         Limit limit = Limit.range(2, 11);
 

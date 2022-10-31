@@ -19,7 +19,10 @@ package jakarta.data.repository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
+
+import jakarta.data.test.util.ReplaceCamelCase;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,10 +31,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+@DisplayNameGeneration(ReplaceCamelCase.class)
 class PageableTest {
 
     @Test
-    @DisplayName("Should correctly paginate")
     void shouldCreatePageable() {
         Pageable pageable = Pageable.ofPage(2).newSize(6);
 
@@ -42,7 +45,6 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Should create pageable with size")
     void shouldCreatePageableWithSize() {
         Pageable pageable = Pageable.ofSize(50);
 
@@ -53,8 +55,7 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Should navigate next")
-    void shouldNext() {
+    void shouldNavigateNext() {
         Pageable pageable = Pageable.ofSize(1).newPage(2);
         Pageable next = pageable.next();
 
@@ -67,8 +68,7 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Should create a new Pageable at the given page with a default size of 10")
-    void shouldCreatePage() {
+    void shouldCreatePageWithDefaultSize10() {
         Pageable pageable = Pageable.ofPage(5);
 
         assertSoftly(softly -> {
@@ -78,7 +78,6 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Should be displayable as String with toString")
     void shouldPageableDisplayAsString() {
 
         assertSoftly(softly -> softly.assertThat(Pageable.ofSize(60).toString())
@@ -90,7 +89,6 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Should throw IllegalArgumentException when page is not present")
     void shouldReturnErrorWhenThereIsIllegalArgument() {
         Pageable p1 = Pageable.ofPage(1);
         assertThatIllegalArgumentException().isThrownBy(() -> Pageable.ofPage(0));
@@ -153,8 +151,7 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Page number should be replaced on new instance of Pageable")
-    public void shouldReplacePage() {
+    public void shouldReplacePageNumberForNewPagable() {
         Pageable p6 = Pageable.ofSize(75).newPage(6).sortBy(Sort.desc("price"));
         Pageable p7 = p6.newPage(7);
 
@@ -169,8 +166,7 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Size should be replaced on new instance of Pageable")
-    public void shouldReplaceSize() {
+    public void shouldReplaceSizeForNewPagable() {
         Pageable s90 = Pageable.ofPage(4).newSize(90);
         Pageable s80 = s90.newSize(80);
 
@@ -183,8 +179,7 @@ class PageableTest {
     }
 
     @Test
-    @DisplayName("Sorts should be replaced on new instance of Pageable")
-    public void shouldReplaceSorts() {
+    public void shouldReplaceSortsForNewPagable() {
         Pageable p1 = Pageable.ofSize(55).sortBy(Sort.desc("lastName"), Sort.asc("firstName"));
         Pageable p2 = p1.sortBy(Sort.asc("firstName"), Sort.asc("lastName"));
 

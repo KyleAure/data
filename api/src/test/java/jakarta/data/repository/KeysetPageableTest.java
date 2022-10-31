@@ -22,16 +22,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
+
+import jakarta.data.test.util.ReplaceCamelCase;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+@DisplayNameGeneration(ReplaceCamelCase.class)
 class KeysetPageableTest {
 
     @Test
-    @DisplayName("Should include keyset values in next Pageable")
     void shouldCreatePageableAfterKeyset() {
         Pageable pageable = Pageable.ofSize(20).afterKeyset("First", 2L, 3);
 
@@ -47,7 +49,6 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Should include keyset values in next Pageable from Cursor")
     void shouldCreatePageableAfterKeysetCursor() {
         Pageable.Cursor cursor = new KeysetCursor("me", 200);
         Pageable pageable = Pageable.ofSize(35).sortBy(Sort.asc("name"), Sort.asc("id")).afterKeysetCursor(cursor);
@@ -64,7 +65,6 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Should include keyset values in previous Pageable")
     void shouldCreatePageableBeforeKeyset() {
         Pageable pageable = Pageable.ofSize(30).sortBy(Sort.desc("yearBorn"), Sort.asc("ssn")).beforeKeyset(1991, "123-45-6789").newPage(10);
 
@@ -80,7 +80,6 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Should include keyset values in previous Pageable from Cursor")
     void shouldCreatePageableBeforeKeysetCursor() {
         Pageable.Cursor cursor = new KeysetCursor(900L, 300, "testing", 120, 'T');
         Pageable pageable = Pageable.ofPage(8).beforeKeysetCursor(cursor);
@@ -100,8 +99,7 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Should be usable in a hashing structure")
-    void shouldHash() {
+    void shouldPagableObjectCreateSameHash() {
         Pageable pageable1 = Pageable.ofSize(15).afterKeyset(1, '1', "1")
                                            .sortBy(Sort.desc("yearHired"), Sort.asc("lastName"), Sort.asc("id"));
         Pageable pageable2a = Pageable.ofSize(15).afterKeyset(2, '2', "2");
@@ -124,7 +122,6 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Should be displayable as String with toString")
     void shouldPageableDisplayAsString() {
         Pageable pageable = Pageable.ofSize(200).afterKeyset("value1", 1);
 
@@ -139,7 +136,6 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Should return true from equals if keyset values and other properties are equal")
     void shouldBeEqualWithSameKeysetValues() {
         Pageable pageable25p1s0a1 = Pageable.ofSize(25).afterKeyset("keyval1", '2', 3);
         Pageable pageable25p1s0b1 = Pageable.ofSize(25).beforeKeyset("keyval1", '2', 3);
@@ -191,7 +187,6 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Should raise IllegalArgumentException when keyset values are absent")
     void shouldRaiseErrorForMissingKeysetValues() {
         assertThatIllegalArgumentException().isThrownBy(() -> Pageable.ofSize(60).afterKeyset(null));
         assertThatIllegalArgumentException().isThrownBy(() -> Pageable.ofSize(70).afterKeyset(new Object[0]));
@@ -200,8 +195,7 @@ class KeysetPageableTest {
     }
 
     @Test
-    @DisplayName("Keyset should be replaced on new instance of Pageable")
-    public void shouldReplaceKeyset() {
+    public void shouldReplaceKeysetForNewInstanceOfPagable() {
         Pageable p1 = Pageable.ofSize(30).sortBy(Sort.asc("lastName"), Sort.asc("firstName"), Sort.asc("id"))
                                          .afterKeyset("last1", "fname1", 100).newPage(12);
         Pageable p2 = p1.beforeKeyset("lname2", "fname2", 200);
