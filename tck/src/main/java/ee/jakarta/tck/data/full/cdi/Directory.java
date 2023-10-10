@@ -13,18 +13,21 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package ee.jakarta.tck.data.framework.junit.anno;
+package ee.jakarta.tck.data.full.cdi;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
+
+import jakarta.data.repository.DataRepository;
+import jakarta.data.repository.Repository;
+
+import ee.jakarta.tck.data.full.cdi.provider.PersonExtension;
 
 /**
- * These are tests use our ReadOnly repositories which are prepopulated on initialization.
+ * A Directory repository for testing.
+ * 
+ * @see ee.jakarta.tck.data.full.cdi.provider.DirectoryRepository
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ReadOnlyTest {
-
+@Repository(provider = PersonExtension.PERSON_PROVIDER)
+public interface Directory extends DataRepository<Person, Long> {    
+    List<String> findFirstNameByIdInOrderByAgeDesc(List<Long> ids);
 }

@@ -15,8 +15,11 @@
  */
 package ee.jakarta.tck.data.web.example;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 
+import ee.jakarta.tck.data.framework.junit.anno.Assertion;
 import ee.jakarta.tck.data.framework.servlet.TestServlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,18 +34,17 @@ public class ComplexServlet extends TestServlet {
     
     public static final String EXPECTED_RESPONSE = "asdf123";
 
+    @Assertion(id = "26", strategy = "Verify assertions defined on a servlet are automatically run.")
     public void testServletSideSuccess() {
-        // Do nothing -- successful method execution
-    }
-
-    public void testServletSideFailure() throws ServletException {
-        throw new ServletException("Expected to fail");
-    }
-
-    public void testMatchServletSideMethodName() {
-        //Do nothing -- should be able to find this method
+        assertTrue(true);
     }
     
+    //This method is not annotated with @Assertion and thus should not be executed
+    public void testServerSideNoExecuted() {
+        assertTrue(false, "This test should not have been exectuted.");
+    }
+    
+    //This test method needs to provide a specific response to the test client
     public void testServletSideCustomResponse(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //Append a custom response
         response.getWriter().append(EXPECTED_RESPONSE);

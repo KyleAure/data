@@ -20,11 +20,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.jboss.arquillian.container.test.api.RunAsClient;
+
+import ee.jakarta.tck.data.framework.servlet.TestServlet;
+
 /**
- * These are tests use our ReadOnly repositories which are prepopulated on initialization.
+ * Extension of the Arquillian {@literal @}RunAsClient annotation.
+ * Specifies a TestServlet class that is automatically scanned for tests to run.
+ * 
+ * TODO - could consider expanding on this annotation to accept multiple TestServlets.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReadOnlyTest {
-
+@RunAsClient
+public @interface RunAsServletClient {
+    
+    /**
+     * The TestServlet associated with this TestClient
+     * 
+     * @return
+     */
+    Class<? extends TestServlet> value();
 }

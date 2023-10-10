@@ -13,18 +13,32 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package ee.jakarta.tck.data.framework.junit.anno;
+package ee.jakarta.tck.data.full.cdi;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import ee.jakarta.tck.data.full.cdi.provider.PersonEntity;
 
 /**
- * These are tests use our ReadOnly repositories which are prepopulated on initialization.
+ * A test entity that will be persisted to a repository.
+ * Uses the custom {@literal @}PersonEntity annotation.
+ * 
+ * @see ee.jakarta.tck.data.full.cdi.provider.PersonEntity
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ReadOnlyTest {
+@PersonEntity
+public class Person {
+    public long id;
+    public String firstName;
+    public String lastName;
+    public int age;
+    
+    public Person() {
+        //blank
+    }
 
+    public Person(long id, String firstName, String lastName, int age) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+    }
+    
 }

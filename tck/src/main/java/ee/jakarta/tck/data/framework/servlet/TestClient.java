@@ -31,17 +31,46 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+
+import ee.jakarta.tck.data.framework.junit.extensions.TestClientArgumentsProvider;
+
+import jakarta.servlet.annotation.WebServlet;
+
 /**
  * <p>This is a superclass that test classes can extend to act as a test client
  * to execute tests that are deployed on a Web Profile Server.</p>
  * 
  * <p>This is used for complex test situations where a custom servlet is required.</p>
  */
-public class TestClient {
+public abstract class TestClient {
     
     private static final String nl = System.lineSeparator();
     
     private static final Logger log = Logger.getLogger(TestClient.class.getCanonicalName());
+    
+    public abstract URL getBaseURL();
+    
+    /**
+     * This ParameterizedTest will be used to automatically execute tests that are defined on the TestServlet class for this test.
+     * 
+     * @param servlet - The servlet class for this client
+     * @param testMethod - The test method name on the servlet
+     */
+    @ParameterizedTest
+    @ArgumentsSource(TestClientArgumentsProvider.class)
+    public void runServletTests(Class<? extends TestServlet> servlet, String testMethod) {
+        assertTrue(servlet.isAnnotationPresent(WebServlet.class));
+        String servletPath = servlet.getClass().getAnnotation(WebServlet.class).value()[0];
+        
+        URL requestURL = URLBuilder.fromURL(getBaseURL())
+                .withPath(servletPath)
+                .withQuery(TestServlet.TEST_METHOD_PARAM, testMethod)
+                .build();
+        
+        runTest(requestURL);
+    }
     
     /**
      * Runs test against servlet at requestURL, and asserts a successful response.

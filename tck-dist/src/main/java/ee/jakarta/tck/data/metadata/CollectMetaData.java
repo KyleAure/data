@@ -20,9 +20,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -36,6 +38,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 
 import ee.jakarta.tck.data.framework.junit.anno.Assertion;
+import ee.jakarta.tck.data.framework.junit.anno.RunAsServletClient;
 import ee.jakarta.tck.data.framework.utilities.TestProperty;
 
 /**
@@ -68,7 +71,7 @@ public class CollectMetaData {
     private static final String TEST_PROPERTIES_FILE = "test-properties.adoc";
         
     // Data holders
-    private static boolean debug = false;
+    private static boolean debug = true;
     private static List<String> apiPackages;
     private static List<Class<?>> testClasses;
     private static File adocGeneratedLocation;
@@ -366,11 +369,12 @@ public class CollectMetaData {
      * @return list of metadata for each test
      */
     private static List<TestMetaData> collectMetaData(List<Class<?>> testClasses) {
-        return testClasses.stream()
+        //Finds tests within the test class itself
+        Stream<TestMetaData> level1 = testClasses.stream()
                 .flatMap(clazz -> AnnotationSupport.findAnnotatedMethods(clazz, Assertion.class, HierarchyTraversalMode.TOP_DOWN).stream())
                 .map(method -> {
                     boolean isDisabled = method.isAnnotationPresent(Disabled.class);
-                    TestMetaData metaData = new TestMetaData(
+                    return new TestMetaData(
                             method.getDeclaringClass().getCanonicalName(),
                             method.getName(),
                             method.getAnnotation(Assertion.class).strategy(),
@@ -378,8 +382,35 @@ public class CollectMetaData {
                             isDisabled ? method.getAnnotation(Disabled.class).value() : "",
                             findTags(method.getDeclaringClass())
                             );
-                    return metaData;
-                }).collect(Collectors.toList());
+                });
+        
+        //Finds test classes within test servlets
+        Stream<TestMetaData> level2 = testClasses.stream()
+                .filter(clazz -> clazz.isAnnotationPresent(RunAsServletClient.class))
+                .flatMap(clientClazz -> {
+                    Class<?> servletClass = clientClazz.getDeclaredAnnotation(RunAsServletClient.class).value();
+                    List<Method> servletMethods = AnnotationSupport.findAnnotatedMethods(servletClass, Assertion.class, HierarchyTraversalMode.TOP_DOWN);
+                    HashMap<Method, Class<?>> clientMap = new HashMap<>(servletMethods.size());
+                    for(Method m : servletMethods) {
+                        clientMap.put(m, clientClazz);
+                    }
+                    return clientMap.entrySet().stream();
+                })
+                .map(clientMap -> {
+                    Method method = clientMap.getKey();
+                    Class<?> clientClazz = clientMap.getValue();
+                    boolean isDisabled = method.isAnnotationPresent(Disabled.class);
+                    
+                    return new TestMetaData(
+                            clientClazz.getCanonicalName(),
+                            method.getName(),
+                            method.getDeclaredAnnotation(Assertion.class).strategy(),
+                            isDisabled,
+                            isDisabled ? method.getDeclaredAnnotation(Disabled.class).value() : "",
+                            findTags(clientClazz)
+                            );
+                });
+        return Stream.concat(level1, level2).toList();
     }
     
     /**
@@ -420,7 +451,7 @@ public class CollectMetaData {
                     debug("Attempting to load test class: " + entry.getName());
                     classList.add(getClass(entry.getName().replaceAll("/", "\\.")));
                 } else if(entry.getName().contains("sig-test-pkg-list.txt")) {
-                    debug("Attempting to read package list" + entry.getName());
+                    debug("Attempting to read package list " + entry.getName());
                     apiPackages = new String(jar.readAllBytes(), StandardCharsets.UTF_8).lines()
                         .filter(line -> !line.contains("#"))
                         .filter(line -> !line.isBlank())

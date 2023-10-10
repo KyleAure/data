@@ -33,7 +33,7 @@ import ee.jakarta.tck.data.framework.junit.anno.Assertion;
  * 
  * @see ee.jakarta.tck.data.framework.junit.anno.Assertion
  */
-public class AssertionExtension implements TestWatcher, BeforeTestExecutionCallback,  AfterTestExecutionCallback{
+public class AssertionExtension implements TestWatcher, BeforeTestExecutionCallback,  AfterTestExecutionCallback {
     private static final Logger log = Logger.getLogger(AssertionExtension.class.getCanonicalName());
     private static final String nl = System.lineSeparator();
 
