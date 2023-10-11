@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import ee.jakarta.tck.data.framework.junit.anno.Assertion;
 import ee.jakarta.tck.data.framework.junit.anno.RunAsServletClient;
 import ee.jakarta.tck.data.framework.servlet.TestClient;
+import jakarta.servlet.annotation.WebServlet;
 
 /**
  * An Argument Provider for a paramaterized test. 
@@ -52,16 +53,21 @@ public class TestClientArgumentsProvider implements ArgumentsProvider {
             return skip;
         }
         
-        log.info("Outside Jakarta EE Platform, executing TestClient param tests.");
-        
+        // We only want to run this parameterized test if the TestServlet is annotated with @WebServlet
         Class<?> testServlet = testClient.getDeclaredAnnotation(RunAsServletClient.class).value();
+        if(! testServlet.isAnnotationPresent(WebServlet.class)) {
+            log.info("The TestServlet was not annotated with WebServlet.");
+            return skip;
+        }
+        
+        String servletPath = testServlet.getAnnotation(WebServlet.class).value()[0];
         
         /**
          * Only execute test methods that are public, non-static, and annotated with @Assertion
          */
         return Arrays.asList(testServlet.getMethods()).stream()
-        .filter(method -> Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers()))
-        .filter(method -> method.isAnnotationPresent(Assertion.class))
-        .map(method -> Arguments.of(testServlet, method.getName()));
+            .filter(method -> Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers()))
+            .filter(method -> method.isAnnotationPresent(Assertion.class))
+            .map(method -> Arguments.of(servletPath, method.getName()));
     }
 }

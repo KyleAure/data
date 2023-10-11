@@ -20,25 +20,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import ee.jakarta.tck.data.framework.servlet.TestServlet;
+import ee.jakarta.tck.data.framework.junit.extensions.ServletClientExtention;
 
 /**
- * Extension of the Arquillian {@literal @}RunAsClient annotation.
- * Specifies a TestServlet class that is automatically scanned for tests to run.
+ * Identifies a test class as a TestClient, that needs to run tests on a TestServlet.
+ * The TestServlet will automatically be scanned for {@literal @}Assertion methods and executed from the TestClient.
  * 
  * TODO - could consider expanding on this annotation to accept multiple TestServlets.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@RunAsClient
+@ExtendWith(ServletClientExtention.class)
 public @interface RunAsServletClient {
     
     /**
-     * The TestServlet associated with this TestClient
+     * The TestServlet class associated with this TestClient
      * 
      * @return
      */
-    Class<? extends TestServlet> value();
+    Class<?> value();
 }

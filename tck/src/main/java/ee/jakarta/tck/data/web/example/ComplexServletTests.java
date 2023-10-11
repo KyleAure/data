@@ -40,10 +40,11 @@ import ee.jakarta.tck.data.framework.servlet.URLBuilder;
 @RunAsServletClient(ComplexServlet.class)
 public class ComplexServletTests extends TestClient {
     
-    @Deployment
+    @Deployment(testable=false)
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addClass(ComplexServlet.class);
+                .addClass(ComplexServlet.class)
+                .addAsLibraries(getServletArchive());
     } 
     
     @ArquillianResource
@@ -62,5 +63,15 @@ public class ComplexServletTests extends TestClient {
                 .build();
         
         super.runTest(requestURL, ComplexServlet.EXPECTED_RESPONSE);
+    }
+    
+    @Assertion(id = "fake")
+    public void testServletSideFailure(TestInfo testInfo) {
+        URL requestURL = URLBuilder.fromURL(baseURL)
+                .withPath(ComplexServlet.URL_PATTERN)
+                .withQuery(ComplexServlet.TEST_METHOD_PARAM, testInfo.getTestMethod().get().getName())
+                .build();
+        
+        super.runTest(requestURL);
     }
 }

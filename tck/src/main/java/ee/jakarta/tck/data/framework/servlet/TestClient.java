@@ -16,6 +16,7 @@
 package ee.jakarta.tck.data.framework.servlet;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -31,12 +32,12 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import ee.jakarta.tck.data.framework.junit.extensions.TestClientArgumentsProvider;
-
-import jakarta.servlet.annotation.WebServlet;
 
 /**
  * <p>This is a superclass that test classes can extend to act as a test client
@@ -50,26 +51,36 @@ public abstract class TestClient {
     
     private static final Logger log = Logger.getLogger(TestClient.class.getCanonicalName());
     
+    public static JavaArchive getServletArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+            .addClass(TestServlet.class);
+    }
+    
     public abstract URL getBaseURL();
     
     /**
      * This ParameterizedTest will be used to automatically execute tests that are defined on the TestServlet class for this test.
      * 
-     * @param servlet - The servlet class for this client
+     * @param path - The path to the servlet
      * @param testMethod - The test method name on the servlet
      */
     @ParameterizedTest
     @ArgumentsSource(TestClientArgumentsProvider.class)
-    public void runServletTests(Class<? extends TestServlet> servlet, String testMethod) {
-        assertTrue(servlet.isAnnotationPresent(WebServlet.class));
-        String servletPath = servlet.getClass().getAnnotation(WebServlet.class).value()[0];
-        
+    public void runServletTests(String path, String testMethod) {        
         URL requestURL = URLBuilder.fromURL(getBaseURL())
-                .withPath(servletPath)
+                .withPath(path)
                 .withQuery(TestServlet.TEST_METHOD_PARAM, testMethod)
                 .build();
         
-        runTest(requestURL);
+        System.out.println("CHECK - built URL");
+        try {
+            runTest(requestURL); //Gets connection to service, and verifies response  
+        } catch (Throwable t) {
+            System.out.println("CHECK - caught throwable: " + t.getLocalizedMessage());
+            fail("Exception: " + t.getLocalizedMessage());
+        } finally {
+            System.out.println("CHECK - ran TEST");    
+        }
     }
     
     /**

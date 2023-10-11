@@ -15,27 +15,27 @@
  */
 package ee.jakarta.tck.data.full.cdi;
 
-import java.net.URL;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
 
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import ee.jakarta.tck.data.framework.junit.anno.AnyEntity;
+import ee.jakarta.tck.data.framework.junit.anno.Assertion;
 import ee.jakarta.tck.data.framework.junit.anno.CDI;
 import ee.jakarta.tck.data.framework.junit.anno.Full;
-import ee.jakarta.tck.data.framework.junit.anno.RunAsServletClient;
-import ee.jakarta.tck.data.framework.servlet.TestClient;
 import ee.jakarta.tck.data.full.cdi.provider.PersonExtension;
 import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
 
 @Full
 @AnyEntity
 @CDI
-@RunAsServletClient(ExtensionServlet.class)
-public class ExtensionTests extends TestClient {
+public class ExtensionTests {
     
     @Deployment
     public static WebArchive createDeployment() {
@@ -50,11 +50,12 @@ public class ExtensionTests extends TestClient {
 
     }
     
-    @ArquillianResource
-    URL baseURL;
+    @Inject
+    Directory directory;
     
-    @Override
-    public URL getBaseURL() {
-        return baseURL;
+    @Assertion(id = "133", strategy="TODO")
+    public void testDataProviderWithExtension() {
+        assertEquals(List.of("Olivia", "Lauren", "Victor"), directory.findFirstNameByIdInOrderByAgeDesc(List.of(04L, 05L, 011L)));
+        
     }
 }

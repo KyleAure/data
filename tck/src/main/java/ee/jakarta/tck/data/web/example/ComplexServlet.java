@@ -39,6 +39,12 @@ public class ComplexServlet extends TestServlet {
         assertTrue(true);
     }
     
+    @Assertion(id = "26", strategy = "Verify assertions defined on a servlet are automatically run, and failures are reported correctly.")
+    public void testServletSideFailure() {
+        assertTrue(false);
+        throw new RuntimeException("FAILURE");
+    }
+    
     //This method is not annotated with @Assertion and thus should not be executed
     public void testServerSideNoExecuted() {
         assertTrue(false, "This test should not have been exectuted.");
