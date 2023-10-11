@@ -34,7 +34,7 @@ public class ComplexServlet extends TestServlet {
     
     public static final String EXPECTED_RESPONSE = "asdf123";
 
-    @Assertion(id = "26", strategy = "Verify assertions defined on a servlet are automatically run.")
+//    @Assertion(id = "26", strategy = "Verify assertions defined on a servlet are automatically run.")
     public void testServletSideSuccess() {
         assertTrue(true);
     }

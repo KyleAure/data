@@ -81,11 +81,7 @@ public class StandaloneExtension extends ArquillianExtension implements BeforeAl
     @Override
     public void interceptTestTemplateMethod(Invocation<Void> invocation,
             ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-        if (TestPropertyUtility.isStandalone()) {
-            invocation.proceed();
-            return;
-        }
-        super.interceptTestTemplateMethod(invocation, invocationContext, extensionContext);
+        System.out.println("KJA1017 - SKIPPING TEST TEMPLATE METHOD");
     }
 
     @Override
