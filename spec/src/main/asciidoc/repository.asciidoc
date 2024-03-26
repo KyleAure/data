@@ -704,6 +704,8 @@ The subsections below specify the rules that an abstract method declaration must
 
 - If every abstract method of a repository complies with the rules specified below, then the Jakarta Data implementation must provide an implementation of the repository.
 - Otherwise, if a repository declares an abstract method which does not comply with the rules specified below, or makes use of functionality which is not supported by the Jakarta Data implementation, then an error might be produced by the Jakarta Data implementation at build time or at runtime.
+  - An error at build time must result in no implementation of the repository to be created.
+  - An error at runtime must cause an `UnsupportedOperationException` to be thrown.
 
 The portability of a given repository interface between Jakarta Data implementations depends on the portability of the entity types it uses.
 If an entity class is not portable between given implementations, then any repository which uses the entity class is also unportable between those implementations.

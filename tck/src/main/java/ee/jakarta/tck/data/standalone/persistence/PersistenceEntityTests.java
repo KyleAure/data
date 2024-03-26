@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,13 +53,18 @@ import jakarta.inject.Inject;
 @Persistence
 public class PersistenceEntityTests {
     
+    private Logger log = Logger.getLogger(PersistenceEntityTests.class.getCanonicalName());
+    
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClasses(Product.class, Catalog.class);
+        return ShrinkWrap.create(JavaArchive.class).addClasses(Product.class, Catalog.class, CatalogWithResource.class);
     }
     
     @Inject
     Catalog catalog;
+    
+    @Inject
+    CatalogWithResource catalogResource;
 
     @Assertion(id = "133", strategy = "Use a repository method with Contains to query for a value with a collection attribute.")
     public void testContainsInCollection() {
@@ -102,16 +108,26 @@ public class PersistenceEntityTests {
 
     @Assertion(id = "133", strategy = "Use a repository method that obtains the Entity Manager.")
     public void testEntityManager() {
-        catalog.deleteByProductNumLike("TEST-PROD-%");
+        if(catalogResource == null) {
+            log.info("Jakarta Data provider does not provide resource accessor method for Entity Manager at build time.");
+            return; //pass
+        }
+        
+        catalogResource.deleteByProductNumLike("TEST-PROD-%");
 
-        catalog.save(Product.of("bicycle", 359.98, "TEST-PROD-81", Department.SPORTING_GOODS));
-        catalog.save(Product.of("shin guards", 8.99, "TEST-PROD-83", Department.SPORTING_GOODS));
-        catalog.save(Product.of("dishwasher", 788.10, "TEST-PROD-86", Department.APPLIANCES));
-        catalog.save(Product.of("socks", 5.99, "TEST-PROD-87", Department.CLOTHING));
-        catalog.save(Product.of("volleyball", 10.99, "TEST-PROD-89", Department.SPORTING_GOODS));
+        catalogResource.save(Product.of("bicycle", 359.98, "TEST-PROD-81", Department.SPORTING_GOODS));
+        catalogResource.save(Product.of("shin guards", 8.99, "TEST-PROD-83", Department.SPORTING_GOODS));
+        catalogResource.save(Product.of("dishwasher", 788.10, "TEST-PROD-86", Department.APPLIANCES));
+        catalogResource.save(Product.of("socks", 5.99, "TEST-PROD-87", Department.CLOTHING));
+        catalogResource.save(Product.of("volleyball", 10.99, "TEST-PROD-89", Department.SPORTING_GOODS));
 
-        assertEquals(385.95, catalog.sumPrices(Department.CLOTHING, Department.SPORTING_GOODS), 0.001);
-        assertEquals(794.09, catalog.sumPrices(Department.CLOTHING, Department.APPLIANCES), 0.001);
+        try {
+            assertEquals(385.95, catalogResource.sumPrices(Department.CLOTHING, Department.SPORTING_GOODS), 0.001);
+            assertEquals(794.09, catalogResource.sumPrices(Department.CLOTHING, Department.APPLIANCES), 0.001);
+        } catch (UnsupportedOperationException e) {
+            log.info("Jakarta Data provider does not provide resource accessor method for Entity Manager at runtime.");
+        }
+
     }
 
     @Assertion(id = "133", strategy = "Use a repository method findByIdBetween where the entity's Id attribute is named something other than id.")
