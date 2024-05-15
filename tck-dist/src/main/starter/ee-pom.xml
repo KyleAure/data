@@ -38,7 +38,7 @@
   <jakarta.data.version>1.0.0-SNAPSHOT</jakarta.data.version>
 
   <arquillian.version>1.7.0.Alpha13</arquillian.version>
-  <junit.version>5.9.0</junit.version>
+  <junit.version>5.10.2</junit.version>
   <sigtest.version>2.3</sigtest.version>
 
   <maven.dep.plugin.version>3.3.0</maven.dep.plugin.version>
