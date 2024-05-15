@@ -37,7 +37,7 @@
   <!-- Default - use local snapshot - can be overwritten by runner -->
   <jakarta.data.version>1.0.0-SNAPSHOT</jakarta.data.version>
 
-  <arquillian.version>1.7.0.Alpha13</arquillian.version>
+  <arquillian.version>1.8.0.Final</arquillian.version>
   <junit.version>5.9.0</junit.version>
   <sigtest.version>2.3</sigtest.version>
 
