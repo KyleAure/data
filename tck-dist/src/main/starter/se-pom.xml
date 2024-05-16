@@ -21,7 +21,7 @@
  <modelVersion>4.0.0</modelVersion>
 
  <groupId>jakarta.data</groupId>
- <artifactId>data-tck-runner</artifactId>
+ <artifactId>data-tck-runner-se</artifactId>
  <version>1.0-SNAPSHOT</version>
  <name>Jakarta Data TCK Runner for [YOUR_IMPL]</name>
 
