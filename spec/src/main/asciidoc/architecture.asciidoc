@@ -164,8 +164,10 @@ Jakarta Data provides two core ways to express queries:
 Newly written code should use these approaches.
 A typical application based on Jakarta Data uses a mix of both approaches, with the choice of approach depending on the complexity of the query.
 
+// TODO - do we remove Query by Method name in 1.1?
 As an extension to the core specification, Jakarta Data 1.0 offers a Query by Method Name facility to provide a migration path for existing applications written for repository frameworks which offer similar functionality.
 Query by Method name is described in a companion document to this specification.
 
+// TODO - do we remove Query by Method name in 1.1?
 A Jakarta Data provider is required to support the Query by Method Name extension in Jakarta Data 1.0.
 This requirement will be removed in a future version of Jakarta Data.

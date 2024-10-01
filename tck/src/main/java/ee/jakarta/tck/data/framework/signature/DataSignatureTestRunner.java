@@ -336,9 +336,9 @@ public class DataSignatureTestRunner extends SigTestEE {
                     "The system property signature.sigTestClasspath must be set in order to run the Signature test.");
         }
 
-        // Ensure user is running on JDK 17 or higher, different JDKs produce different signatures
+        // Ensure user is running on JDK 21 or higher, different JDKs produce different signatures
         int javaSpecVersion = Integer.parseInt(System.getProperty("java.specification.version"));
-        assertTrue(javaSpecVersion >= 17, "The signature tests must be run on a JVM using Java 17 or higher.");
+        assertTrue(javaSpecVersion >= 21, "The signature tests must be run on a JVM using Java 21 or higher.");
 
         // Ensure user has the correct security/JDK settings to allow the plugin access
         // to internal JDK classes.

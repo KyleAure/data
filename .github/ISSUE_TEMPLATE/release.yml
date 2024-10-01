@@ -38,7 +38,7 @@ body:
           #### Stage release
             - [ ] [Update the CHANGELOG.adoc file to reflect the changes put into the new release](https://github.com/jakartaee/data/blob/main/CHANGELOG.adoc)
             - [ ] [Build and stage artifacts to staging repository](https://ci.eclipse.org/data/view/Release%20Builds/job/jakarta-data-build-and-stage/)
-            - [ ] [Build and stage the TCK distribution artifact to download.eclipse.org](https://ci.eclipse.org/data/view/Eclipse%20Builds/job/jakarta-data-tck-build-and-stage/)
+            - [ ] [Build and stage the TCK distribution artifact to download.eclipse.org](https://ci.eclipse.org/data/view/Eclipse%20Builds/job/jakarta-data-tck-pull-and-stage/)
             - [ ] Update this issue with a comment that links to the staged artifacts and the generated GitHub branch and tag
             - [ ] [Create a `draft` release on GitHub](https://github.com/jakartaee/data/releases/new)
           #### Verify and modify
@@ -50,9 +50,9 @@ body:
             - [ ] Update this issue with a comment that links to the published artifacts and the generated GitHub branch and tag
             - [ ] [Modify the `draft` release on GitHub to be `pre-release` or `latest`](https://github.com/jakartaee/data/releases)
           #### Follow up
-            - [ ] [Email a Jakarta steering committee member to promote the TCK Distribution publically](https://ci.eclipse.org/jakartaee-spec-committee/job/promote-release/)
             - [ ] [Create pull request to https://github.com/jakartaee/specifications](https://github.com/jakartaee/specifications/blob/master/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md)
               - upload [generated specification documentation](https://github.com/jakartaee/data/actions/workflows/specification.yml)
+              - request specification committee to publish promoted TCK distribution
             - [ ] Update versions in non-build files, such as:
               Documentation:
               - [README.adoc](https://github.com/jakartaee/data/blob/main/README.adoc)

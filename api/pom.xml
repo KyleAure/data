@@ -24,7 +24,7 @@
     <parent>
         <groupId>jakarta.data</groupId>
         <artifactId>jakarta.data-parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jakarta.data-api</artifactId>
@@ -35,7 +35,7 @@
         <assertj.version>3.26.3</assertj.version>
         <!-- default is the same for backward compatibility reason
         Easy to override when building with a system property -->
-        <spec.version>1.0</spec.version>
+        <spec.version>1.1</spec.version>
     </properties>
 
     <dependencies>
@@ -91,7 +91,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <source>17</source>
+                            <source>21</source>
                             <quiet>true</quiet>
                             <additionalJOption>-Xdoclint:none</additionalJOption>
                             <description>Jakarta Data API documentation</description>
