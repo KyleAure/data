@@ -37,15 +37,15 @@ import java.util.logging.Logger;
 @Standalone
 @AnyEntity
 @DisplayName("Jakarta Data integration with Jakarta Common Query Language for update operations")
-public class JakartaUpdateQueryTests {
+public class QueryUpdateTests {
 
-    public static final Logger log = Logger.getLogger(JakartaUpdateQueryTests.class.getCanonicalName());
+    public static final Logger log = Logger.getLogger(QueryUpdateTests.class.getCanonicalName());
 
 
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addClasses(JakartaUpdateQueryTests.class,
+                .addClasses(QueryUpdateTests.class,
                         Fruit.class, FruitRepository.class);
     }
 
